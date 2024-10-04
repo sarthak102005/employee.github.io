@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard - Aarav Mehta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .sidebar h2 {
+            margin-bottom: 20px;
+        }
+        .sidebar button {
+            background-color: #34495e;
+            color: white;
+            padding: 15px;
+            border: none;
+            margin-bottom: 10px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .sidebar button:hover {
+            background-color: #1abc9c;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background-color: #34495e;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .charts {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .chart-box {
+            width: 48%;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .calendar-box {
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #ecf0f1;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        table.calendar {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table.calendar td {
+            padding: 10px;
+            text-align: center;
+        }
+        table.calendar td.worked {
+            background-color: #2ecc71;
+            color: white;
+        }
+        table.calendar td.leave {
+            background-color: #e74c3c;
+            color: white;
+        }
+        table.calendar td.holiday {
+            background-color: #3498db;
+            color: white;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Employee Interface</h2>
+        <button onclick="toggleCalendar()">Employee Calendar</button>
+        <button onclick="requestWithdrawal()">Request Early Wage Withdrawal</button>
+        <button onclick="raiseConcern()">Raise a Concern</button>
+        <button onclick="viewSalary()">View Salary Details</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>Welcome, Aarav Mehta</h1>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts">
+            <div class="chart-box">
+                <h3>Incentives Received</h3>
+                <canvas id="incentiveChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3>Salary Overview</h3>
+                <canvas id="salaryChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Calendar -->
+        <div id="calendarBox" class="calendar-box" style="display:none;">
+            <h3>September 2024 Calendar</h3>
+            <table class="calendar" border="1">
+                <tr>
+                    <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+                </tr>
+                <tr>
+                    <td></td><td></td><td></td><td class="worked">1</td><td class="worked">2</td><td class="worked">3</td><td>4</td>
+                </tr>
+                <tr>
+                    <td>5</td><td class="worked">6</td><td class="worked">7</td><td class="leave">8</td><td class="worked">9</td><td class="worked">10</td><td>11</td>
+                </tr>
+                <tr>
+                    <td>12</td><td class="worked">13</td><td class="worked">14</td><td class="worked">15</td><td class="holiday">16</td><td class="worked">17</td><td>18</td>
+                </tr>
+                <tr>
+                    <td>19</td><td class="worked">20</td><td class="worked">21</td><td class="leave">22</td><td class="worked">23</td><td class="worked">24</td><td>25</td>
+                </tr>
+                <tr>
+                    <td>26</td><td class="worked">27</td><td class="worked">28</td><td class="worked">29</td><td class="holiday">30</td><td></td><td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Script to create charts -->
+<script>
+    function toggleCalendar() {
+        var calendarBox = document.getElementById("calendarBox");
+        if (calendarBox.style.display === "none") {
+            calendarBox.style.display = "block";
+        } else {
+            calendarBox.style.display = "none";
+        }
+    }
+
+    var ctx1 = document.getElementById('incentiveChart').getContext('2d');
+    var incentiveChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+            datasets: [{
+                label: 'Incentives (in ₹)',
+                data: [15000, 12000, 18000, 20000, 22000, 25000, 21000, 24000, 27000],
+                backgroundColor: '#3498db'
+            }]
+        }
+    });
+
+    var ctx2 = document.getElementById('salaryChart').getContext('2d');
+    var salaryChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+            datasets: [{
+                label: 'Salary (in ₹)',
+                data: [55000, 55000, 57000, 60000, 60000, 62000, 63000, 64000, 65000],
+                borderColor: '#2ecc71',
+                fill: false
+            }]
+        }
+    });
+</script>
+
+</body>
+</html>
